@@ -203,19 +203,86 @@ MVVM
   ```
 
   Note: Create an independent module for each kind of responsability, do not mix views with service controllers.
-  
+
 
 ### Separe controllers and concerns
 ###### [Arch [X002](#arch-x002)]
 
   - Split controllers in viewmodel controllers and service controllers.
-
   
+    *Why?*: View controllers should be as small as possible.
 
-Views Models ViewControllers ServiceControllers
+    *Why?*: Having service controllers apart allows to reuse them in multiple views.
+
+    *Why?*: Lowes coupling and raises cohesion.
+
+  ```javascript
+  /* avoid */
+  // src/app.route.cart/cart.route.js
+  angular
+      .module('app.route.cart')
+      .config(cartRoute);
+
+  /* @ngInject */
+  function cartRoute($routeProvider) {
+    $routeProvider.when('/cart', {
+        controller: CartController,
+        controllerAs: 'vm',
+        templateUrl: 'src/app.route.cart/cart.template.html',
+    });
+  }
+
+  /* @ngInject */
+  function CartController($http) {
+    var vm = this;
+    vm.addProduct = addProduct;
+    ...
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/app.route.cart/cart.route.js
+  angular
+      .module('app.route.cart')
+      .config(cartRoute);
+
+  /* @ngInject */
+  function cartRoute($routeProvider) {
+    $routeProvider.when('/cart', {
+        controller: CartController,
+        controllerAs: 'vm',
+        templateUrl: 'src/app.route.cart/cart.template.html',
+    });
+  }
+
+  /* @ngInject */
+  function CartController(cartService) {
+    var vm = this;
+    vm.cart = cart;
+    ...
+  }
+
+  // src/app.cart/cart.service.js
+  angular
+      .module('app.cart')
+      .factory('cartService', cartService);
+
+  /* @ngInject */
+  function cartService($http) {
+    var service = {
+        addProduct = addProduct;
+        ...
+    };
+    ...
+  }
+  ```
 
 
 **[Back to top](#table-of-contents)**
+  
+
+Views Models ViewControllers ServiceControllers
 
 Component: directiva de entitat
 Decorator: directiva d’atribut que canvia comportament sense scope
