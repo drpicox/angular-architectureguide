@@ -280,6 +280,84 @@ MVVM
 
 
 **[Back to top](#table-of-contents)**
+
+
+Cohesion and coupling
+---------------------
+
+### Cohesion: keep related together 
+###### [Arch [X010](#arch-x010)]
+
+  - Keep in the same component close related things.
+
+    *Why?*: Related things are usually subject to the same maintenance tasks.
+
+    *Why?*: Avoid finding multiple files across your project when updating the same concept.
+
+  ```javascript
+  /* avoid */
+  // src/app.profileviews/ProfileUpdate.controller.js
+  angular
+      .module('app.profileviews')
+      .controller('ProfileUpdateController', ProfileUpdateController);
+
+  /* ngInject */
+  function ProfileUpdateController(profileService, $http) {
+    this.profile = profileService;
+    this.update = update;
+  }
+
+  // src/app.profile/ProfileUpdate.controller.js
+  angular
+      .module('app.profile')
+      .factory('profileService', profileService);
+
+  /* ngInject */
+  function profileService($http) {
+    var service = {
+        username: '',
+        ...
+    };
+    ...
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/app.profileviews/ProfileUpdate.controller.js
+  angular
+      .module('app.profileviews')
+      .controller('ProfileUpdateController', ProfileUpdateController);
+
+  /* ngInject */
+  function ProfileUpdateController(profileService) {
+    this.profile = profileService;
+  }
+
+  // src/app.profile/ProfileUpdate.controller.js
+  angular
+      .module('app.profile')
+      .factory('profileService', profileService);
+
+  /* ngInject */
+  function profileService($http) {
+    var service = {
+        username: '',
+        ...
+        update: update,
+    };
+    ...
+  }
+  ```
+
+  Note: Related things to keep together in the same file usually refers to the same concept.
+
+
+### Cohesion: keep unrelated apart
+###### [Arch [X011](#arch-x011)]
+
+
+**[Back to top](#table-of-contents)**
   
 
 Views Models ViewControllers ServiceControllers
