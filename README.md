@@ -586,7 +586,31 @@ Cohesion and coupling
 ### Coupling: MVC* dependence graph
 ###### [Arch [X015](#arch-x015)]
 
-  - Only allow dependences between component kinds in the following directions: Models only knows other models; Views depends in models and other views;  
+  - Only allow dependences between component kinds in the following directions: Models only knows other models; Views depends in models and other views; Service controller depends in other service controllers and models; and View controllers depends in all other services.
+
+    *Why?*: Models should be the most simple component. So simple that they can be simple plain javascript objects, although they _implement_ an interface.
+
+    *Why?*: Views should be easy to understand for designers, so they should kept as simple as possible.
+
+    *Why?*: Service controllers should know nothing about views, because they are abstract entities that constructs the application state.
+
+    *Why?*: View controllers have access to all elements because it is responsible to trigger communication between al levels. Although they have big couplings, view controllers should be really small so any change should have a minimum impact.
+
+  ```
+       -----------                ---------------------
+      |   Views   |   <-------   |  View Controllers   |
+       -----------                ---------------------
+            |                /             |
+            |              /               |
+            |            /                 |
+            |          /                   |
+            v        L                     v
+       -----------                ---------------------
+      |  Models   |   <-------   | Service Controllers |
+       -----------                ---------------------
+  ```
+
+  Note: in fact, as seen in previous examples, views uses service controllers, but it can be also interpreted as a shortcut of the view definition that have callbacks that triggers the view controller, which executes a service controller.
 
 **[Back to top](#table-of-contents)**
   
