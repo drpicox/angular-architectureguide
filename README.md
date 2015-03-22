@@ -446,7 +446,7 @@ Cohesion and coupling
 
     *Why?*: Defining a direction of dependencies between components and modules creates SOLID architectures with better maintainability.
 
-    ```
+  ```
     ProfileViewController
       |
       |----> ProfileService
@@ -456,24 +456,76 @@ Cohesion and coupling
     PictureService -----|
                         |
                          -------> PictureStorage --------> $storage
-    ```
+  ```
 
   Note: At least define directions between modules, and between components inside each module.
 
-    ```
+  ```
     app.profileview --> app.profile, app.pictures
 
     app.pictures:
-                          -------> PicturesRemote  --------> $http
+                          -------> picturesRemote  --------> $http
                          |
-    PicturesService -----|
+    picturesService -----|
                          |
-                          -------> PicturesStorage --------> $storage
-    ```
+                          -------> picturesStorage --------> $storage
+  ```
 
+### Coupling: do not make circles
+###### [Arch [X013](#arch-x013)]
 
+  - Do not make cycles when programming, explicitly o implicitly. 
 
-    *Why?*: Two components with a cycle of dependences are one single
+    *Why?*: Two components with a cycle of dependences become on single component when we are doing maintenance tasks.
+
+    *Why?*: Usually when there is a cycle in fact there is a hidden component which undoes the cycle.
+
+  ```
+  /* avoid */
+
+      Product <------- Cart
+          |              ^
+           --------------
+
+  /* recommended */
+
+      Product <-------- Cart
+         ^                |
+          --- LineItem <--
+  ```
+
+  Note: many times dependencies between components are not just injected with dependency injection but they are in fact assuming the existence of the other entity and manage it.
+
+  ```javascript
+  /* avoid */
+  function Product(args) {
+    this.id = args.id;
+    this.cart = args.cart;
+    this.count = 0;
+  }
+  ...
+
+  function Cart() {
+    this.products = [];
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  
+  function Product(args) {
+    this.id = args.id;
+  }
+
+  function LineItem(args) {
+    this.product = args.product;
+    this.count = args.count || 0;
+  }
+
+  function Cart() {
+    this.items = [];
+  }
+  ```
 
 **[Back to top](#table-of-contents)**
   
