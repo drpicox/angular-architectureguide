@@ -527,6 +527,67 @@ Cohesion and coupling
   }
   ```
 
+### Coupling: MVC with at least two kinds of controllers
+###### [Arch [X014](#arch-x014)]
+
+  - Split controllers in at least two kinds: Service controllers and View controllers.
+
+  - Service controllers loads and saves data, and manages the state of the Application.
+  
+  - View controllers configures views using service controllers and should have minimum logic.
+  
+    *Why?*: View controllers should have minimum logic because the same models and informations can be presented in many ways (different kinds of views).
+
+    *Why?*: Service controllers can be shared between multiple views.
+
+  ```javascript
+  /* avoid */
+  // /src/app.booksview/BookEditController.js
+  /* @ngInject */
+  public BookEditController(book, $http) {
+      var vm = this;
+      vm.book = book;
+      vm.save = save;
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  // /src/app.booksview/BookEdit.controller.js
+  angular
+    .module('app.booksview')
+    .controller('BookEditController', BookEditController);
+
+  /* @ngInject */
+  public BookEditController(book, booksService) {
+      var vm = this;
+      vm.book = book;
+      vm.books = booksService;
+  }
+
+  // /src/app.books/books.service.js
+  angular
+    .module('app.books')
+    .controller('booksService', booksService);
+
+  /* @ngInject */
+  public booksService($http) {
+      var service = {
+        save: save,
+        ...
+      };
+      ...
+  }
+  ```
+
+  Note: in the implementation booksService is published into the view as _books_ so a book can be saved just with `vm.books.save(vm.book)`.
+
+
+### Coupling: MVC* dependence graph
+###### [Arch [X015](#arch-x015)]
+
+  - Only allow dependences between component kinds in the following directions: Models only knows other models; Views depends in models and other views;  
+
 **[Back to top](#table-of-contents)**
   
 
