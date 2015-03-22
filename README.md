@@ -13,23 +13,25 @@ Table of Contents
 
 1. [MVVM](#mvvm)
 1. [Cohesion and coupling](#cohesion-and-coupling)
-1. [Modules](#modules)
-1. [Components naming](#components-naming)
-1. [Components](#components)
-1. [References between components](#references-between-components)
-1. [Multi-transclusion](#multi-transclusion)
-1. [Decorators](#decorators)
-1. [Supports](#supports)
-1. [Models](#models)
-1. [Factories](#factories)
-1. [States](#states)
-1. [Services](#services)
-1. [Providers](#providers)
-1. [Configurations](#configurations)
-1. [Helpers](#helpers)
-1. [Routes](#routes)
-1. [Handlers](#handlers)
-1. [Styles](#styles)
+1. [Modules](#modules) // TODO
+1. [Components naming](#components-naming) // TODO
+1. [Components](#components) // TODO
+1. [References between components](#references-between-components) // TODO
+1. [Multi-transclusion](#multi-transclusion) // TODO
+1. [Decorators](#decorators) // TODO
+1. [Supports](#supports) // TODO
+1. [Models](#models) // TODO
+1. [Factories](#factories) // TODO
+1. [States](#states) // TODO
+1. [Services](#services) // TODO
+1. [Providers](#providers) // TODO
+1. [Remotes](#remotes) // TODO
+1. [Storages](#storages) // TODO
+1. [Configurations](#configurations) // TODO
+1. [Helpers](#helpers) // TODO
+1. [Routes](#routes) // TODO
+1. [Handlers](#handlers) // TODO
+1. [Styles](#styles) // TODO
 
 MVVM
 ----
@@ -356,11 +358,87 @@ Cohesion and coupling
 ### Cohesion: keep unrelated apart
 ###### [Arch [X011](#arch-x011)]
 
+  - Keep apart different concepts or concerns.
+
+    *Why?*: Each component implementing one single feature allows to avoid mixing concerns.
+
+    *Why?*: Changes, updates, or documentation becomes better focused.
+
+    *Why?*: It is easier and safer to change application polices when it is required.
+
+  ```javascript
+  /* avoid */
+  // src/app.pictures/pictures.service.js
+  angular
+      .module('app.pictures')
+      .factory('pircturesService', picturesService);
+
+  /* ngInject */
+  function picturesService($http,$storage) {
+    var service = {
+      get: get,
+      ...
+    }
+    ...
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/app.pictures/pictures.service.js
+  angular
+      .module('app.pictures')
+      .factory('pircturesService', picturesService);
+
+  /* ngInject */
+  function picturesService(picturesStorage,picturesRemote) {
+    var service = {
+      get: get,
+      ...
+    }
+    ...
+  }
+
+  // src/app.pictures/pictures.storage.js
+  angular
+      .module('app.pictures')
+      .factory('pircturesStorage', picturesStorage);
+
+  /* ngInject */
+  function picturesStorage($storage) {
+    var service = {
+      get: get,
+      save: save,
+      ...
+    }
+    ...
+  }
+
+  // src/app.pictures/pictures.remote.js
+  angular
+      .module('app.pictures')
+      .factory('pircturesRemote', picturesRemote);
+
+  /* ngInject */
+  function picturesRemote($http) {
+    var service = {
+      get: get,
+      ...
+    }
+    ...
+  }
+  ```
+
+  Note: It is easy to get lost in tones of lines of code trying to split future things, do not. Split components only when it is obvious that you are mixin two behaviours.
+
+
 
 **[Back to top](#table-of-contents)**
   
 
 Views Models ViewControllers ServiceControllers
+Coupling: define a strategy of usage
+Coupling: Composition bettern than inheritance
 
 Component: directiva de entitat
 Decorator: directiva d’atribut que canvia comportament sense scope
