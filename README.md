@@ -379,6 +379,14 @@ Cohesion and coupling
       get: get,
       ...
     }
+
+    function get(id) {
+      // get from storage, 
+      // then if not saved get from remote
+      // then save
+      // then return result
+      ...
+    }
     ...
   }
   ```
@@ -431,7 +439,41 @@ Cohesion and coupling
 
   Note: It is easy to get lost in tones of lines of code trying to split future things, do not. Split components only when it is obvious that you are mixin two behaviours.
 
+### Coupling: define a direction
+###### [Arch [X012](#arch-x012)]
 
+  - Define a direction of dependencies between components so you have a graph without cycles.
+
+    *Why?*: Defining a direction of dependencies between components and modules creates SOLID architectures with better maintainability.
+
+    ```
+    ProfileViewController
+      |
+      |----> ProfileService
+      |
+      |                  -------> PictureRemote  --------> $http
+      v                 |
+    PictureService -----|
+                        |
+                         -------> PictureStorage --------> $storage
+    ```
+
+  Note: At least define directions between modules, and between components inside each module.
+
+    ```
+    app.profileview --> app.profile, app.pictures
+
+    app.pictures:
+                          -------> PicturesRemote  --------> $http
+                         |
+    PicturesService -----|
+                         |
+                          -------> PicturesStorage --------> $storage
+    ```
+
+
+
+    *Why?*: Two components with a cycle of dependences are one single
 
 **[Back to top](#table-of-contents)**
   
