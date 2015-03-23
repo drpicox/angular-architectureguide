@@ -612,12 +612,143 @@ Cohesion and coupling
 
   Note: in fact, as seen in previous examples, views uses service controllers, but it can be also interpreted as a shortcut of the view definition that have callbacks that triggers the view controller, which executes a service controller.
 
+
+### Coupling: Composition bettern than inheritance
+###### [Arch [X016](#arch-x016)]
+
+  - When you can choose between composition or inheritance choose composition.
+
+    *Why?*: Inheritance has a high coupling between parent and child class.
+
+    *Why?*: A change in the parent usually affects to child class.
+
+    *Why?*: Composition allows to implement easily multiple interfaces.
+
+    *Why?*: Javascript do not have classes like other common Object Oriented programming languages, neither has inheritance like other programming languages.
+
+    *Why?*: Class casting does not limits Javascript behaviour; you can assume that an Object satisfies the interface.
+
+  ```javascript
+  /* avoid */
+  // src/app.engine/entity.model.js
+  angular
+    .module('app.engine')
+    .value('Entity', Entity);
+
+  function Entity(data) {
+    angular.extends(this, data);
+  }
+  Entity.prototype.collide = collide;
+  Entity.prototype.draw = draw;
+  Entity.prototype.move = move;
+  ...
+
+  // src/app.engine/ball.model.js
+  angular
+    .module('app.engine')
+    .factory('Ball', ballFactory);
+
+  /* @ngInject */
+  function ballFactory(Entity) {
+    function Ball(data) {
+      Entity.call(this, data);
+    }
+    Ball.prototype = new Entity();
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/app.engine/entity.model.js
+  angular
+    .module('app.engine')
+    .value('Entity', Entity);
+
+  function Entity(data) {
+    angular.extends(this, data);
+  }
+  ...
+
+  // src/app.engine/solid.model.js
+  angular
+    .module('app.engine')
+    .value('Solid', Solid);
+
+  function Solid(data) {
+    angular.extends(this, data);
+  }
+  ...
+
+  Solid.prototype.collide = collide;
+
+  // src/app.engine/visible.model.js
+  angular
+    .module('app.engine')
+    .value('Visible', Visible);
+
+  function Visible(data) {
+    angular.extends(this, data);
+  }
+  ...
+
+  // src/app.engine/movable.model.js
+  angular
+    .module('app.engine')
+    .value('Movable', Movable);
+
+  function Movable(data) {
+    angular.extends(this, data);
+  }
+  Movable.prototype.move = move;
+  ...
+
+  // src/app.engine/ball.model.js
+  angular
+    .module('app.engine')
+    .factory('Ball', ballFactory);
+
+  /* @ngInject */
+  function ballFactory(Entity, Solid, Visible, Movable) {
+    function Ball(data) {
+      Entity.call(this, data);
+      Solid.call(this, data);
+      Visible.call(this, data);
+      Movable.call(this, data);
+    }
+    angular.extend(Ball.prototype, Entity.prototype);
+    angular.extend(Ball.prototype, Solid.prototype);
+    angular.extend(Ball.prototype, Visible.prototype);
+    angular.extend(Ball.prototype, Movable.prototype);
+  }
+  ```
+
+  Note: if you can you may use properties.
+
+  ```javascript
+  /* even better */
+  // src/app.engine/ball.model.js
+  angular
+    .module('app.engine')
+    .factory('Ball', ballFactory);
+
+  /* @ngInject */
+  function ballFactory(Entity, Solid, Visible, Movable) {
+    function Ball(data) {
+      Entity.call(this, data);
+      this.solid = new Solid();
+      this.visible = new Visible();
+      this.movable = new Movable();
+    }
+    angular.extend(Ball.prototype, Entity.prototype);
+  }
+  ```
+
+
 **[Back to top](#table-of-contents)**
   
 
-Views Models ViewControllers ServiceControllers
-Coupling: define a strategy of usage
-Coupling: Composition bettern than inheritance
+
+Coupling: Coupling: feature detection better than polymorphism
 
 Component: directiva de entitat
 Decorator: directiva d’atribut que canvia comportament sense scope
