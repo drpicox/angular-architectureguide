@@ -744,6 +744,39 @@ Cohesion and coupling
   ```
 
 
+### Coupling: feature detection better than polymorphism
+###### [Arch [X017](#arch-x017)]
+
+  - Avoid classic polymorphism in benefit of feature detection. Instead of creating classes and polymorphic methods or polymorphic views relay on detecting features (properties and methods) present in each object to choose if given controller or view acts or not.
+
+    *Why?*: Handle polymorphism creates a high coupling of the factory of the polymorphic object with all possible subclasses.
+
+    *Why?*: Polymorphism usually forces to know 100% the characteristics of an Object since the first moment instead of allow to construct it in multiple steps.
+
+    *Why?*: Root _class_ tends to integrate all kind of services and stubs related to its children.
+
+    *Why?*: Polymorphism hides and mades unclear the final behaviour of the component.
+
+    *Why?*: Javascript functional behaviour is the final polymorphic class with a single polymorphic method.
+
+  ```html
+  <!-- avoid -->
+  <!-- src/app.productsview/productDetail.component.html -->
+  <div class="product" ng-include="'src/app.productsview/productDetail-'+vm.product.kind+'.component.html'">
+  </div>
+  ```
+
+  ```html
+  <!-- recommended -->
+  <!-- src/app.productsview/productDetail.component.html -->
+  <div class="product">
+    <h1 ng-bind="vm.product.name"></h1>
+    <product-price data-product="vm.product" ng-if="!!vm.product.price"></product-price>
+    <product-supplies data-product="vm.product" ng-if="!!vm.product.supplies"></product-supplies>    
+  </div>
+  ```
+
+
 **[Back to top](#table-of-contents)**
   
 
