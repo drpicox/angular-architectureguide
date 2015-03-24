@@ -782,8 +782,68 @@ Cohesion and coupling
 Modules
 -------
 
-### Cohesion: keep related together 
-###### [Arch [X010](#arch-x010)]
+### Modules directories
+###### [Arch [X020](#arch-x020)]
+
+  - Put each module and its components inside a directory with the module name inside the `src/` folder. Yes, directories can have dots.
+
+    *Why?*: All code must be inside `src/` folder.
+
+    *Why?*: Instead of creating nested directories making all directories at the same levels is useful to get a good overview of the application.
+
+    *Why?*: Easy to locate each directory.
+
+  ```
+  - avoid.txt
+  - src/
+    + common/
+    - products/
+      + routes/
+      + services/
+      + views/
+    - users/
+      + routes/
+      + services/
+      + views/
+  ```
+
+  ```
+  - recommended.txt
+  - src/
+    + app/
+    + app.products.services/
+    + app.products.views/
+    + app.routes.products/
+    + app.routes.users/
+    + app.users.services/
+    + app.users.views/
+    + common/
+  ```
+
+
+### App module built with children module
+###### [Arch [X020](#arch-x020)]
+
+  - Keep app module almost empty with just the required configurations specific for the app and dependencies with all children modules. Routes, views, services, and other componentes should be each in its module.
+
+  ```
+  - avoid.txt
+  - src/app.module.js
+  - src/users.config.js
+  - src/users.route.js
+  - src/users.service.js
+  ```
+
+  ```
+  - recommended.txt
+  - src/app/app.module.js
+  - src/app/users.config.js
+  - src/app.routes.users/users.module.js
+  - src/app.routes.users/users.route.js
+  - src/app.users.services/users.module.js
+  - src/app.users.services/users.service.js
+  ```
+
 
 
 Component: directiva de entitat
