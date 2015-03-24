@@ -822,9 +822,15 @@ Modules
 
 
 ### App module built with children module
-###### [Arch [X020](#arch-x020)]
+###### [Arch [X021](#arch-x021)]
 
   - Keep app module almost empty with just the required configurations specific for the app and dependencies with all children modules. Routes, views, services, and other componentes should be each in its module.
+
+    *Why?*: We are targeting large developments.
+
+    *Why?*: We want to keep close related things, and far unrelated.
+
+    *Why?*: Files in a directory should not exceed 10 in average, 20 most.
 
   ```
   - avoid.txt
@@ -838,10 +844,46 @@ Modules
   - recommended.txt
   - src/app/app.module.js
   - src/app/users.config.js
-  - src/app.routes.users/users.module.js
+  - src/app.routes.users/routesUsers.module.js
   - src/app.routes.users/users.route.js
-  - src/app.users.services/users.module.js
+  - src/app.users.services/servicesUsers.module.js
   - src/app.users.services/users.service.js
+  ```
+
+
+### Separe concerns in modules
+###### [Arch [X021](#arch-x021)]
+
+  - Separe routes, view components, and services and models in different modules.
+
+    *Why?*: View components are usually shared between multiple routes.
+
+    *Why?*: Services and models are related, and they are usually shared across any other module.
+
+    *Why?*: Reduce accidental coupling: spliting them in many modules it is easier to follow Cohesion and Coupling principles.
+
+  ```
+  - avoid.txt
+  - src/app/app.module.js
+  - src/app/users.config.js
+  - src/app.users/userDetail.component.js
+  - src/app.users/users.module.js
+  - src/app.users/users.route.js
+  - src/app.users/users.service.js
+  - src/app.users/User.model.js
+  ```
+
+  ```
+  - recommended.txt
+  - src/app/app.module.js
+  - src/app/users.config.js
+  - src/app.rotutes.users/routesUsers.module.js
+  - src/app.rotutes.users/users.route.js
+  - src/app.users.views/userDetail.component.js
+  - src/app.users.views/usersViews.module.js
+  - src/app.users.services/User.model.js
+  - src/app.users.services/users.service.js
+  - src/app.users.services/usersServices.module.js
   ```
 
 
