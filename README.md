@@ -13,7 +13,7 @@ Table of Contents
 
 1. [MVVM](#mvvm)
 1. [Cohesion and coupling](#cohesion-and-coupling)
-1. [Modules](#modules) // TODO
+1. [Modules](#modules)
 1. [Components naming](#components-naming) // TODO
 1. [Components](#components) // TODO
 1. [References between components](#references-between-components) // TODO
@@ -778,10 +778,13 @@ Cohesion and coupling
 
 
 **[Back to top](#table-of-contents)**
-  
+ 
+Modules
+-------
 
+### Cohesion: keep related together 
+###### [Arch [X010](#arch-x010)]
 
-Coupling: Coupling: feature detection better than polymorphism
 
 Component: directiva de entitat
 Decorator: directiva d’atribut que canvia comportament sense scope
