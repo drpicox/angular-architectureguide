@@ -14,7 +14,7 @@ Table of Contents
 1. [MVVM](#mvvm)
 1. [Cohesion and coupling](#cohesion-and-coupling)
 1. [Modules](#modules)
-1. [Components naming](#components-naming) // TODO
+1. [Components naming](#components-naming)
 1. [Components](#components) // TODO
 1. [References between components](#references-between-components) // TODO
 1. [Multi-transclusion](#multi-transclusion) // TODO
@@ -785,9 +785,9 @@ Modules
 ### Modules directories
 ###### [Arch [X020](#arch-x020)]
 
-  - Put each module and its components inside a directory with the module name inside the `src/` folder. Yes, directories can have dots.
+  - Put each module and its components inside a directory with the module name inside the `src/` directory. Yes, directories can have dots.
 
-    *Why?*: All code must be inside `src/` folder.
+    *Why?*: The `src/` directory separes source to be developed and versioned from other libraries or configurations.
 
     *Why?*: Instead of creating nested directories making all directories at the same levels is useful to get a good overview of the application.
 
@@ -852,7 +852,7 @@ Modules
 
 
 ### Separe concerns in modules
-###### [Arch [X021](#arch-x021)]
+###### [Arch [X022](#arch-x022)]
 
   - Separe routes, view components, and services and models in different modules.
 
@@ -886,6 +886,45 @@ Modules
   - src/app.users.services/usersServices.module.js
   ```
 
+
+**[Back to top](#table-of-contents)**
+
+
+Components naming
+-----------------
+
+### Put role in the name
+###### [Arch [X030](#arch-x030)]
+
+  - For each component suffix the name with the role. Do not limit to _directive_, _service_, _model_, _route_, _run_, _controller_, but instead use more detailed names. Define carefully names and roles and use them consistenly across all your project. For example _component_ or _widget_ for directives that are reusable visual components, _decorator_ for directives that changes the behaviour of a template widget, _state_ for those services that keeps a state but do not access remote, _storage_ for services that saves data in the client, _remote_ for services that handles a remote connection, ...
+
+    *Why?*: It allows to create a better separation of concerns.
+
+    *Why?*: It allows to recognize more easily the task of each component.
+
+  ```
+  - avoid.txt
+  - src/app.users.services/usersStorage.service.js
+  - src/app.users.services/users.service.js
+  - src/app.users.services/User.model.js
+  ```
+
+  ```
+  - recommended.txt
+  - src/app.users.services/users.remote.js
+  - src/app.users.services/users.service.js
+  - src/app.users.services/users.storage.js
+  - src/app.users.services/user.model.js
+  ```
+
+  Note: in this case the users service creates the bridge between remote and storage.
+
+  Note: ex: users.remote.js define usersRemote service.
+
+  Note: in this document there is already a recommendation.
+
+
+**[Back to top](#table-of-contents)**
 
 
 Component: directiva de entitat
