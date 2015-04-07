@@ -1162,6 +1162,30 @@ Components are those directives that have a controller and a template, with or w
   ```
 
 
+### Style elements
+###### [Arch [X045](#arch-x045)]
+
+  - When defining a style for a component do it over the css element, no over a css class.
+ 
+    *Why?*: Applying styles over classes forces to put the class each time that the directive is used.
+
+  ```css
+  /* avoid */
+  .product-detail {
+    display: block;
+    ...
+  }
+  ```
+
+  ```css
+  /* recommended */
+  [product-detail] {
+    display: block;
+    ...
+  }
+  ```
+
+
 - styles over element, no class
 - do not use link but activate (link is for decorators)
 - id 
