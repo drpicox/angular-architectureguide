@@ -962,6 +962,7 @@ Components are those directives that have a controller and a template, with or w
       restrict: 'A',
       controller: UserDetailController,
       controllerAs: 'vm',
+      scope: {},
     };
   }
   ...
@@ -979,6 +980,7 @@ Components are those directives that have a controller and a template, with or w
       restrict: 'E',
       controller: UserDetailController,
       controllerAs: 'vm',
+      scope: {},
     };
   }
   ...
@@ -998,6 +1000,7 @@ Components are those directives that have a controller and a template, with or w
       restrict: 'A',
       controller: UserDetailController,
       controllerAs: 'vm',
+      scope: {},
     };
   }
   ...
@@ -1025,14 +1028,57 @@ Components are those directives that have a controller and a template, with or w
 
   Note: this convention should be applied also to decorators.
 
+### Use isolated scopes
+###### [Arch [X042](#arch-x042)]
+
+  - Use always isolated scopes in components.
+
+    *Why?*: It avoids side effects in the interaction between scopes.
+
+  ```javascript
+  /* avoid */
+  // src/app.users.views/userDetail.component.js
+  angular
+    .module('app.users.view')
+    .value('appUserDetail', userDetail);
+
+  function userDetail() {
+    var directive = {
+      restrict: 'A',
+      controller: UserDetailController,
+      controllerAs: 'vm',
+      scope: true,
+    };
+  }
+  ...
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/app.users.views/userDetail.component.js
+  angular
+    .module('app.users.view')
+    .value('appUserDetail', userDetail);
+
+  function userDetail() {
+    var directive = {
+      restrict: 'E',
+      controller: UserDetailController,
+      controllerAs: 'vm',
+      scope: {},
+    };
+  }
+  ...
+  ```
 
 
-- data in attributes
 - put controller in the same file
 - use always controllerAs as:'vm' and scope: {} 
 - styles and templates toghether
 - styles over element, no class
 - do not use link but activate (link is for decorators)
+- id 
+- transcludes
 
 **[Back to top](#table-of-contents)**
 
