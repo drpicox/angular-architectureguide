@@ -964,6 +964,7 @@ Components are those directives that have a controller and a template, with or w
       controllerAs: 'vm',
       scope: {},
     };
+    return directive;
   }
   ...
   ```
@@ -982,6 +983,7 @@ Components are those directives that have a controller and a template, with or w
       controllerAs: 'vm',
       scope: {},
     };
+    return directive;
   }
   ...
   ```
@@ -1002,6 +1004,7 @@ Components are those directives that have a controller and a template, with or w
       controllerAs: 'vm',
       scope: {},
     };
+    return directive;
   }
   ...
   ```
@@ -1049,6 +1052,7 @@ Components are those directives that have a controller and a template, with or w
       controllerAs: 'vm',
       scope: true,
     };
+    return directive;
   }
   ...
   ```
@@ -1067,6 +1071,7 @@ Components are those directives that have a controller and a template, with or w
       controllerAs: 'vm',
       scope: {},
     };
+    return directive;
   }
   ...
   ```
@@ -1095,6 +1100,7 @@ Components are those directives that have a controller and a template, with or w
       controllerAs: 'vm',
       scope: {},
     };
+    return directive;
   }
   
   // src/app.users.views/userDetail.controller.js
@@ -1123,6 +1129,7 @@ Components are those directives that have a controller and a template, with or w
       controllerAs: 'vm',
       scope: {},
     };
+    return directive;
   }
 
   /* @ngInject */
@@ -1186,10 +1193,60 @@ Components are those directives that have a controller and a template, with or w
   ```
 
 
-- styles over element, no class
+### Link and activate
+###### [Arch [X046](#arch-x046)]
+
+  - Do not use link, except for activate.
+
+  *Why?*: The objective of link is to manipulate DOM, or to execute code after children components are initialized. DOM manipulation should be done with mainly with decorators. To execute acode after children are initialized we use `activate` method in the controller (called by link).
+
+  *Why?*: Using `link` usually tends to use scope erroniously.
+
+  ```javascript
+  /* avoid */
+  // src/app.users.views/userDetail.component.js
+  angular
+    .module('app.users.view')
+    .directive('appUserDetail', userDetail);
+
+  function userDetail() {
+    var directive = {
+      restrict: 'E',
+      controller: UserDetailController,
+      controllerAs: 'vm',
+      scope: {},
+      link: link;
+    };
+    ...
+    return directive;
+  }
+  ...
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/app.users.views/userDetail.component.js
+  angular
+    .module('app.users.view')
+    .directive('appUserDetail', userDetail);
+
+  function userDetail() {
+    var directive = {
+      restrict: 'E',
+      controller: UserDetailController,
+      controllerAs: 'vm',
+      scope: {},
+    };
+    return directive;
+  }
+  ...
+  ```
+
+
 - do not use link but activate (link is for decorators)
 - id 
 - transcludes
+- controller
 
 **[Back to top](#table-of-contents)**
 
