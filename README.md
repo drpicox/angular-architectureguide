@@ -15,7 +15,7 @@ Table of Contents
 1. [Cohesion and coupling](#cohesion-and-coupling)
 1. [Modules](#modules)
 1. [Components naming](#components-naming)
-1. [Components](#components) // TODO
+1. [Components](#components)
 1. [References between components](#references-between-components) // TODO
 1. [Multi-transclusion](#multi-transclusion) // TODO
 1. [Decorators](#decorators) // TODO
@@ -923,6 +923,107 @@ Components naming
 
   Note: in this document there is already a recommendation.
 
+
+**[Back to top](#table-of-contents)**
+
+Components
+----------
+
+Components are those directives that have a controller and a template, with or without transclude.
+
+### Provide a Unique Directive Prefix 
+
+  See: https://github.com/johnpapa/angular-styleguide#style-y073
+
+
+### Restrict components to entity only 
+###### [Arch [X040](#arch-x040)]
+
+  - Make components directives restricted to entity only.
+
+    *Why?*: It is easy to recognize components in template code.
+
+  ```javascript
+  /* avoid */
+  // src/app.users.views/userDetail.component.js
+  angular
+    .module('app.users.view')
+    .value('appUserDetail', userDetail);
+
+  function userDetail() {
+    var directive = {
+      restrict: 'A',
+      controller: UserDetailController,
+      controllerAs: 'vm',
+    };
+  }
+  ...
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/app.users.views/userDetail.component.js
+  angular
+    .module('app.users.view')
+    .value('appUserDetail', userDetail);
+
+  function userDetail() {
+    var directive = {
+      restrict: 'E',
+      controller: UserDetailController,
+      controllerAs: 'vm',
+    };
+  }
+  ...
+  ```
+
+  Note: if your are using Angular 1.2 and your target browser includes Internet Explorer 8, you may use `restrict: 'A'`, but suffix the directive with View.
+
+  ```javascript
+  /* for IE8 */
+  // src/app.users.views/userDetail.component.js
+  angular
+    .module('app.users.view')
+    .value('appUserDetailView', userDetail);
+
+  function userDetail() {
+    var directive = {
+      restrict: 'A',
+      controller: UserDetailController,
+      controllerAs: 'vm',
+    };
+  }
+  ...
+  ```
+
+
+### Use data- in the scope attributes 
+###### [Arch [X041](#arch-x041)]
+
+  - In the template, when you are passing attributes to a directive, use `data-` preffix.
+ 
+    *Why?*: It is easy to recognize that these attributes are directives arguments and not other directives themselves.
+
+  ```html
+  <!-- avoid -->
+  <product-detail product="product">
+  </product-detail>
+  ```
+
+  ```html
+  <!-- recommended -->
+  <product-detail data-product="product">
+  </product-detail>
+  ```
+
+
+
+- data in attributes
+- put controller in the same file
+- use always controllerAs as:'vm' and scope: {} 
+- styles and templates toghether
+- styles over element, no class
+- do not use link but activate (link is for decorators)
 
 **[Back to top](#table-of-contents)**
 
