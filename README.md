@@ -1138,8 +1138,30 @@ Components are those directives that have a controller and a template, with or w
 
   Note: using IFEE, browserify, ... UserDetailController becomes a private function of the current scope, so it can be mangled and minimized.
 
+### Styles and templates together
+###### [Arch [X044](#arch-x044)]
 
-- styles and templates toghether
+  - Keep styles and templates in the same directory.
+
+    *Why?*: Styles and templates have a strong dependence, it is very likely that the developer/designer will change both together. 
+
+    *Why?*: Template is the view, it is configured by the controller. So there is a strong dependence between both.
+
+  ```
+  - avoid.txt
+  - src/app.cart.views/cart.component.js
+  - src/styles/cart.style.less
+  - src/templates/cart.tpl.html
+  ```
+
+  ```
+  - recommended.txt
+  - src/app.cart.views/cart.component.js
+  - src/app.cart.views/cart.style.less
+  - src/app.cart.views/cart.tpl.html
+  ```
+
+
 - styles over element, no class
 - do not use link but activate (link is for decorators)
 - id 
