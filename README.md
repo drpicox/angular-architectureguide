@@ -931,9 +931,16 @@ Components
 
 Components are those directives that have a controller and a template, with or without transclude.
 
-### Provide a Unique Directive Prefix 
+### Read carefully John Papa style
 
+  - Provide a Unique Directive Prefix
   See: https://github.com/johnpapa/angular-styleguide#style-y073
+
+  - Directives and ControllerAs
+  See: https://github.com/johnpapa/angular-styleguide#style-y075
+
+  - Bind scope to controller
+  See: https://github.com/johnpapa/angular-styleguide#style-y076
 
 
 ### Restrict components to entity only 
@@ -1018,7 +1025,7 @@ Components are those directives that have a controller and a template, with or w
 
   Note: this convention should be applied also to decorators.
 
-  
+
 
 - data in attributes
 - put controller in the same file
