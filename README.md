@@ -1196,7 +1196,7 @@ Components are those directives that have a controller and a template, with or w
 ### Link and activate
 ###### [Arch [X046](#arch-x046)]
 
-  - Do not use link, except for activate.
+  - Do not use link.
 
   *Why?*: The objective of link is to manipulate DOM, or to execute code after children components are initialized. DOM manipulation should be done with mainly with decorators. To execute acode after children are initialized we use `activate` method in the controller (called by link).
 
@@ -1240,6 +1240,82 @@ Components are those directives that have a controller and a template, with or w
     return directive;
   }
   ...
+  ```
+
+
+###### [Arch [X047](#arch-x047)]
+
+  - Use link for activate. It will call activate from controller.
+
+    *Why?*: Some initializations should be done after all children are initialized. Controller is initialized before children, but link after children.
+
+    *Why?*: Activation code should remain in the controller.
+
+  ```javascript
+  /* avoid */
+  // src/co.widgets.slider/coSlider.component.js
+  angular
+    .module('co.widgets.slider')
+    .directive('coSlider', slider);
+
+  function slider() {
+    var directive = {
+      restrict: 'E',
+      controller: SliderController,
+      controllerAs: 'vm',
+      scope: {},
+      link: link;
+    };
+    
+    return directive;
+
+    function link (scope) {
+      angular.forEach(scope.vm.items, function(item) {
+        ...
+      });
+    }
+  }
+  
+  function SliderController() {
+    var vm = this;
+    vm.items = [];
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/co.widgets.slider/coSlider.component.js
+  angular
+    .module('co.widgets.slider')
+    .directive('coSlider', slider);
+
+  function slider() {
+    var directive = {
+      restrict: 'E',
+      controller: SliderController,
+      controllerAs: 'vm',
+      scope: {},
+      link: link;
+    };
+    
+    return directive;
+
+    function link (scope) {
+      scope.vm.activate();
+    }
+  }
+  
+  function SliderController() {
+    var vm = this;
+    vm.items = [];
+    vm.activate = activate;
+
+    function activate() {
+      angular.forEach(vm.items, function(item) {
+        ...
+      });
+    }
+  }
   ```
 
 
