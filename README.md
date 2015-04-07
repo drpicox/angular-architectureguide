@@ -1016,7 +1016,9 @@ Components are those directives that have a controller and a template, with or w
   </product-detail>
   ```
 
+  Note: this convention should be applied also to decorators.
 
+  
 
 - data in attributes
 - put controller in the same file
