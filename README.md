@@ -955,7 +955,7 @@ Components are those directives that have a controller and a template, with or w
   // src/app.users.views/userDetail.component.js
   angular
     .module('app.users.view')
-    .value('appUserDetail', userDetail);
+    .directive('appUserDetail', userDetail);
 
   function userDetail() {
     var directive = {
@@ -973,7 +973,7 @@ Components are those directives that have a controller and a template, with or w
   // src/app.users.views/userDetail.component.js
   angular
     .module('app.users.view')
-    .value('appUserDetail', userDetail);
+    .directive('appUserDetail', userDetail);
 
   function userDetail() {
     var directive = {
@@ -993,7 +993,7 @@ Components are those directives that have a controller and a template, with or w
   // src/app.users.views/userDetail.component.js
   angular
     .module('app.users.view')
-    .value('appUserDetailView', userDetail);
+    .directive('appUserDetailView', userDetail);
 
   function userDetail() {
     var directive = {
@@ -1040,11 +1040,11 @@ Components are those directives that have a controller and a template, with or w
   // src/app.users.views/userDetail.component.js
   angular
     .module('app.users.view')
-    .value('appUserDetail', userDetail);
+    .directive('appUserDetail', userDetail);
 
   function userDetail() {
     var directive = {
-      restrict: 'A',
+      restrict: 'E',
       controller: UserDetailController,
       controllerAs: 'vm',
       scope: true,
@@ -1058,7 +1058,7 @@ Components are those directives that have a controller and a template, with or w
   // src/app.users.views/userDetail.component.js
   angular
     .module('app.users.view')
-    .value('appUserDetail', userDetail);
+    .directive('appUserDetail', userDetail);
 
   function userDetail() {
     var directive = {
@@ -1072,8 +1072,73 @@ Components are those directives that have a controller and a template, with or w
   ```
 
 
-- put controller in the same file
-- use always controllerAs as:'vm' and scope: {} 
+### Directive and controllers together
+###### [Arch [X043](#arch-x043)]
+
+  - Keep directives and controllers in the same file.
+
+    *Why?*: Directive is just a definition, controller has the behaviour. Splitting both creates almost meaningless files (directive configuration) separated from all the relevant logic.
+
+    *Why?*: It is very close to the Angular 2.0 logic, so transition should be easier.
+
+  ```javascript
+  /* avoid */
+  // src/app.users.views/userDetail.component.js
+  angular
+    .module('app.users.view')
+    .directive('appUserDetail', userDetail);
+
+  function userDetail() {
+    var directive = {
+      restrict: 'E',
+      controller: 'UserDetailController',
+      controllerAs: 'vm',
+      scope: {},
+    };
+  }
+  
+  // src/app.users.views/userDetail.controller.js
+  angular
+    .module('app.users.view')
+    .controller('UserDetailController', UserDetailController);
+
+  /* @ngInject */
+  function UserDetailController(userService) {
+    var vm = this;
+    vm.user = userService;
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/app.users.views/userDetail.component.js
+  angular
+    .module('app.users.view')
+    .directive('appUserDetail', userDetail);
+
+  function userDetail() {
+    var directive = {
+      restrict: 'E',
+      controller: UserDetailController,
+      controllerAs: 'vm',
+      scope: {},
+    };
+  }
+
+  /* @ngInject */
+  function UserDetailController(userService) {
+    var vm = this;
+    vm.user = userService;
+  }
+  ```
+
+  Note: using this schema controllers are completely private for each file and not published.
+
+  Note: although because testability it seems better to split, so controller can be tested without the directive, the controller is responsible for the directive behavior, so the controller should be tested through the directive, which is the controller exposed.
+
+  Note: using IFEE, browserify, ... UserDetailController becomes a private function of the current scope, so it can be mangled and minimized.
+
+
 - styles and templates toghether
 - styles over element, no class
 - do not use link but activate (link is for decorators)
