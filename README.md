@@ -1193,7 +1193,7 @@ Components are those directives that have a controller and a template, with or w
   ```
 
 
-### Link and activate
+### Link and activate
 ###### [Arch [X046](#arch-x046)]
 
   - Do not use link.
@@ -1319,15 +1319,50 @@ Components are those directives that have a controller and a template, with or w
   ```
 
 
+**[Back to top](#table-of-contents)**
+
+
+References between components
+-----------------------------
+
+### Use #id decorator
+###### [Arch [X050](#arch-x050)]
+
+  - Use an `id` decorator to emulate Angular2 `#id` notation.
+
+    *Why?*: It allows to create more flexible relationships between directives.
+
+    *Why?*: Using `ng-controller` induces poor decisions and it has hard limits: maximum 1 ng-controller per entity, only children entities can see controllers, no arguments are allowed to parametrize them.
+
+  ```html
+  <!-- avoid -->
+  <div ng-controller="LoadDataController as loader">
+    <div ng-if="loader.loading">Loading...</div>
+    <div ng-if="!loader.loading" ng-bind="loader.data"></div>
+  </div>
+  ```
+
+
+  ```html
+  <!-- recommended -->
+  <data-loader id="loader"></data-loader>
+  <div ng-if="$.loader.loading">Loading...</div>
+  <div ng-if="!$.loader.loading" ng-bind="$.loader.data"></div>
+  ```
+
+
+  Note: you can find here https://github.com/drpicox/drpx-id an implementation of the `id` decorator.
+
+
+**[Back to top](#table-of-contents)**
+
+
 - do not use link but activate (link is for decorators)
 - id 
 - transcludes
 - controller
 
-**[Back to top](#table-of-contents)**
 
-
-Component: directiva de entitat
 Decorator: directiva d’atribut que canvia comportament sense scope
 Model:
 Factory: creador de models amb nom (casi com state)
