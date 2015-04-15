@@ -1253,7 +1253,7 @@ Components are those directives that have a controller and a template, with or w
 
   ```javascript
   /* avoid */
-  // src/co.widgets.slider/coSlider.component.js
+  // src/co.widgets.slider/slider.component.js
   angular
     .module('co.widgets.slider')
     .directive('coSlider', slider);
@@ -1284,7 +1284,7 @@ Components are those directives that have a controller and a template, with or w
 
   ```javascript
   /* recommended */
-  // src/co.widgets.slider/coSlider.component.js
+  // src/co.widgets.slider/slider.component.js
   angular
     .module('co.widgets.slider')
     .directive('coSlider', slider);
@@ -1352,6 +1352,68 @@ References between components
 
 
   Note: you can find here https://github.com/drpicox/drpx-id an implementation of the `id` decorator.
+
+
+### Parent references
+###### [Arch [X051](#arch-x051)]
+
+  - Use `require` + `$element.controller`. Use `require` to make angular check dependences. Use `$element.controller` to look for parent controllers in the controller of your directive.
+
+    *Why?*: directive `require` notation adds an automatic angular checking so developer/view constructor receives an error if required elements are not present.
+
+    *Why?*: use `$element.controller` because we do not want to use the link funcion in components.
+
+  ```javascript
+  /* avoid */
+  // src/co.widgets.slider/slideItem.component.js
+  angular
+    .module('co.widgets.slider')
+    .directive('coSliderItem', sliderItem);
+
+  function slideItem() {
+    var directive = {
+      restrict: 'E',
+      require: '^slider',
+      link: link,
+    };
+    return directive;
+
+    function link(scope, element, attrs, sliderCtrl) {
+      sliderCtrl.addItem(this);
+      ...
+    }
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  // src/co.widgets.slider/slideItem.component.js
+  angular
+    .module('co.widgets.slider')
+    .directive('coSliderItem', sliderItem);
+
+  function slideItem() {
+    var directive = {
+      restrict: 'E',
+      require: '^coSlider',
+      controller: SlideItemController,
+      controllerAs: 'vm',
+    };
+    return directive;
+  }
+
+  /* @ngInject */
+  function SlideItemController($element) {
+    var slicer = $element.controller('coSlider');
+    sliderCtrl.addItem(this);
+    ...
+  }
+  ```
+
+ Note: Angular execution order is to instantiate first parent controllers (so children can reference them), if you want to do a post process after all children has been initialized, you have to use the pattern [Arch [X046](#arch-x046)].
+
+ Note: this pattern is also valid for controllers in the same element.
+
 
 
 **[Back to top](#table-of-contents)**
