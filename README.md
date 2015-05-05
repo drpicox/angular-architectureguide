@@ -16,8 +16,8 @@ Table of Contents
 1. [Modules](#modules)
 1. [Components naming](#components-naming)
 1. [Components](#components)
-1. [References between components](#references-between-components) // TODO
-1. [Multi-transclusion](#multi-transclusion) // TODO
+1. [References between components](#references-between-components)
+1. [Transclusion](#transclusion) // TODO
 1. [Decorators](#decorators) // TODO
 1. [Supports](#supports) // TODO
 1. [Models](#models) // TODO
@@ -1415,14 +1415,63 @@ References between components
  Note: this pattern is also valid for controllers in the same element.
 
 
+Transclusion
+------------
+
+### Use transclusion
+###### [Arch [X060](#arch-x060)]
+
+  - Use transclusion to parametrize directives with html code.
+
+    *Why?*: Transclusion is a very powerful tool but usually very missunderstood.
+
+    *Why?*: It allows to compose new directives based in existing ones.
+
+  ```html
+  <!-- avoid -->
+  <div class="box">
+    <div class="box-title">{{vm.title}}</div>
+    <div class="box-body" ng-include="vm.typeUrl"></div>
+  </div>
+  ```
+
+  ```html
+  <!-- recommended -->
+  <div class="box">
+    <div class="box-title">{{vm.title}}</div>
+    <div class="box-body" ng-transclude></div>
+  </div>
+  ```
+
+
+### Multi-transclusion
+###### [Arch [X061](#arch-x061)]
+
+  - Use multi-transclusion when you have to parametrize a directive with more than one html block.
+
+  ```html
+  <!-- avoid -->
+  <div class="box">
+    <div class="box-title" ng-bind-html="vm.titleHtml"></div>
+    <div class="box-body" ng-include="vm.bodyUrl"></div>
+    <div class="box-footer" ng-bind-html="vm.footer"></div>
+  </div>
+  ```
+
+  ```html
+  <!-- recommended -->
+  <div class="box">
+    <div class="box-title" transclude-id="title"></div>
+    <div class="box-body" transclude-id="body"></div>
+    <div class="box-footer" transclude-id="footer"></div>
+  </div>
+  ```
+
+  Note: Angular does not have directives supporting multitransclusion, but you can use one of many of the libraries existing, ex: https://github.com/drpicox/drpx-transcludeto
+
 
 **[Back to top](#table-of-contents)**
 
-
-- do not use link but activate (link is for decorators)
-- id 
-- transcludes
-- controller
 
 
 Decorator: directiva d’atribut que canvia comportament sense scope
